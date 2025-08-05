@@ -11,7 +11,7 @@ const Navbar = () => {
         <Link to="/library" className="text-blue-600 font-medium hover:underline">
           My Library
         </Link>
-        <Link to="/account" className="nav-link">My Account</Link>
+        //<Link to="/account" className="nav-link">My Account</Link>
       </div>
       <div className="w-8 h-8 bg-blue-500 text-white flex items-center justify-center rounded-full">
         K

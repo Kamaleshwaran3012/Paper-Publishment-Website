@@ -1,31 +1,36 @@
-// src/pages/MyProfilePage.jsx
-import React, { useContext, useState } from 'react';
-import { AppContext } from '../context/AppContext';
+import React, { useState } from 'react';
+import { useAppContext } from "../context/AppContext";
 
 const MyProfilePage = () => {
-  const { user, addPaper } = useContext(AppContext);
+  const { user, papers, setPapers } = useAppContext(); // ✅
   const [paperTitle, setPaperTitle] = useState('');
   const [abstract, setAbstract] = useState('');
   const [file, setFile] = useState(null);
 
-  const handleUpload = (e) => {
-    e.preventDefault();
-    if (paperTitle.trim() && abstract.trim() && file) {
-      const newPaper = {
-        title: paperTitle,
-        abstract,
-        fileName: file.name,
-        uploadedAt: new Date().toISOString(),
-      };
-      addPaper(newPaper); // store it in AppContext
-      alert(`Uploaded "${paperTitle}" successfully!`);
-      setPaperTitle('');
-      setAbstract('');
-      setFile(null);
-    } else {
-      alert('Please fill in all fields.');
-    }
+  const addPaper = (newPaper) => {
+    setPapers([...papers, newPaper]); // ✅ adds to global state
   };
+
+  const handleUpload = (e) => {
+  e.preventDefault();
+  if (paperTitle.trim() && abstract.trim() && file) {
+    const newPaper = {
+      title: paperTitle,
+      abstract,
+      fileName: file.name,
+      fileUrl: URL.createObjectURL(file), // ✅ Add file URL
+      uploadedAt: new Date().toISOString(),
+    };
+    setPapers([...papers, newPaper]); // ✅ Save to context
+    alert(`Uploaded "${paperTitle}" successfully!`);
+    setPaperTitle('');
+    setAbstract('');
+    setFile(null);
+  } else {
+    alert('Please fill in all fields.');
+  }
+};
+
 
   return (
     <div className="max-w-xl mx-auto mt-10 p-6 border rounded shadow">

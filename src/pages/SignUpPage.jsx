@@ -1,6 +1,8 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AppContext } from '../context/AppContext';
+import { useAppContext } from "../context/AppContext";
+
+
 
 const SignUpPage = () => {
   const { setUser } = useContext(AppContext);
@@ -20,6 +22,8 @@ const SignUpPage = () => {
 
     // Navigate to profile
     navigate('/my-profile');
+    sessionStorage.removeItem("loggedOut"); // ✅ Login again
+
   };
 
   return (

@@ -1,14 +1,5 @@
-// App.jsx
-
 import React from "react";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  useLocation,
-  Navigate,
-  useNavigate,
-} from "react-router-dom";
+import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import { AppProvider } from "./context/AppContext";
 
 // Pages & Components
@@ -20,6 +11,7 @@ import MyProfilePage from "./pages/MyProfilePage";
 import LibraryPage from "./pages/LibraryPage";
 import ProfilePage from "./pages/ProfilePage";
 import RecentPapers from "./pages/RecentPapers";
+import MyAccountPage from './pages/MyAccountPage';
 
 const Layout = () => {
   const location = useLocation();
@@ -28,8 +20,6 @@ const Layout = () => {
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar />
-
-      {/* Title Bar */}
       {!isProfilePage && (
         <div className="p-4 shadow flex items-center justify-center">
           <h1 className="text-2xl font-semibold">
@@ -37,13 +27,9 @@ const Layout = () => {
           </h1>
         </div>
       )}
-
-      {/* Conditional Search Bar */}
       <div className="px-4 mt-2">
         {isProfilePage ? <AuthorSearchBar /> : <SearchBar />}
       </div>
-
-      {/* Main Pages */}
       <div className="flex-grow p-4">
         <Routes>
           <Route path="/" element={<RecentPapers />} />
@@ -51,8 +37,8 @@ const Layout = () => {
           <Route path="/my-profile" element={<MyProfilePage />} />
           <Route path="/library" element={<LibraryPage />} />
           <Route path="/profile" element={<ProfilePage />} />
-          {/* Redirect unknown paths */}
           <Route path="*" element={<Navigate to="/" />} />
+          <Route path="/account" element={<MyAccountPage />} />
         </Routes>
       </div>
     </div>
@@ -61,9 +47,7 @@ const Layout = () => {
 
 const App = () => (
   <AppProvider>
-    <Router>
-      <Layout />
-    </Router>
+    <Layout /> {/* ✅ NO <Router> here */}
   </AppProvider>
 );
 
