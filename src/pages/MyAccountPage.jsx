@@ -1,23 +1,30 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useAppContext } from '../context/AppContext';
+import { useNavigate } from 'react-router-dom';
 
 const MyAccountPage = () => {
-  const { user, setUser, setPapers } = useAppContext();
+  const { user, setUser } = useAppContext();
   const navigate = useNavigate();
 
- const handleLogout = () => {
-  // ❌ Don't clear localStorage
-  sessionStorage.setItem("loggedOut", "true"); // optional flag
-  setUser(null);         // remove current user from memory
-  navigate('/signup');   // redirect to signup/login page
-};
+  const handleLogout = () => {
+    sessionStorage.setItem("loggedOut", "true");
+    setUser(null);
+    navigate('/signup');
+  };
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-6 border rounded shadow">
-      <h2 className="text-2xl font-bold mb-4">My Account</h2>
-      <p className="mb-4 text-gray-700">Name: {user?.name}</p>
-      <p className="mb-4 text-gray-700">Email: {user?.email}</p>
+    <div className="max-w-md mx-auto mt-16 p-6 border rounded shadow bg-white">
+      <div className="flex items-center justify-center mb-4">
+        <img
+          src="https://avatars.githubusercontent.com/u/1?v=4"
+          alt="Avatar"
+          className="w-20 h-20 rounded-full border-2 border-gray-300"
+        />
+      </div>
+
+      <h2 className="text-2xl font-bold mb-2 text-center">My Account</h2>
+      <p className="mb-2 text-gray-700 text-center">👤 {user?.name}</p>
+      <p className="mb-6 text-gray-700 text-center">📧 {user?.email}</p>
 
       <button
         onClick={handleLogout}
