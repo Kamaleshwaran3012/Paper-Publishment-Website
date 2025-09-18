@@ -40,3 +40,56 @@
 .read-the-docs {
   color: #888;
 }
+
+
+/* Header Container */
+.header-container {
+  padding: 20px;
+  background: linear-gradient(90deg, #f8fafc, #f1f5f9);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  margin:0px;
+}
+
+/* Title Styling */
+.header-title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  letter-spacing: 3px;
+  color: #1f2937; /* Neutral gray */
+  position: relative;
+  display: inline-block;
+  padding-bottom: 8px;
+}
+
+/* Gradient Highlight for "ISTA" */
+.header-title .highlight {
+  background: linear-gradient(90deg, #2563eb, #9333ea);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Underline Accent */
+.header-title::after {
+  content: "";
+  display: block;
+  width: 70%;
+  height: 4px;
+  margin: 10px auto 0;
+  border-radius: 2px;
+  background: linear-gradient(90deg, #2563eb, #9333ea, #ec4899);
+  animation: underline-slide 3s ease-in-out infinite alternate;
+}
+
+/* Animation for underline */
+@keyframes underline-slide {
+  from {
+    width: 40%;
+  }
+  to {
+    width: 80%;
+  }
+}
+#root{
+   background: linear-gradient(90deg, #dbeafe, #ede9fe, #fce7f3);
+}

@@ -1,21 +1,16 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import "../css/Navbar.css";
 
 const Navbar = () => {
   return (
-    <nav className="flex items-center justify-between p-4 shadow bg-white">
-      <div className="flex gap-4">
-        <Link to="/profile" className="text-blue-600 font-medium hover:underline">
-          Profile
-        </Link>
-        <Link to="/library" className="text-blue-600 font-medium hover:underline">
-          My Library
-        </Link>
-        //<Link to="/account" className="nav-link">My Account</Link>
+    <nav>
+      <div className="nav-links">
+        <Link to="/profile">Profile</Link>
+        <Link to="/library">My Library</Link>
+        {/* <Link to="/account">My Account</Link> */}
       </div>
-      <div className="w-8 h-8 bg-blue-500 text-white flex items-center justify-center rounded-full">
-        K
-      </div>
+      <div className="profile-icon">K</div>
     </nav>
   );
 };

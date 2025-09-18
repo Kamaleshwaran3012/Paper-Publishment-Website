@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useAppContext } from "../context/AppContext";
+import "../css/MyProfilePage.css"; // import CSS
 
 const MyProfilePage = () => {
   const { user, papers, setPapers } = useAppContext();
@@ -29,21 +30,21 @@ const MyProfilePage = () => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto mt-10 p-6 border rounded shadow bg-white">
-      <h2 className="text-2xl font-bold mb-2">👋 Hello, {user?.name || 'User'}</h2>
-      <p className="mb-6 text-gray-600">Submit your latest research paper below:</p>
+    <div className="profile-form-container">
+      <h2 className="profile-form-title">👋 Hello, {user?.name || 'User'}</h2>
+      <p className="profile-form-subtitle">Submit your latest research paper below:</p>
 
-      <form onSubmit={handleUpload} className="space-y-4">
+      <form onSubmit={handleUpload} className="profile-form">
         <input
           type="text"
-          className="w-full p-2 border rounded"
+          className="input-field"
           placeholder="Paper Title"
           value={paperTitle}
           onChange={(e) => setPaperTitle(e.target.value)}
           required
         />
         <textarea
-          className="w-full p-2 border rounded"
+          className="textarea-field"
           placeholder="Abstract"
           rows={4}
           value={abstract}
@@ -52,16 +53,13 @@ const MyProfilePage = () => {
         />
         <input
           type="file"
-          className="w-full"
+          className="file-input"
           onChange={(e) => setFile(e.target.files[0])}
           required
         />
-        {file && <p className="text-sm text-green-600">📄 {file.name}</p>}
+        {file && <p className="file-name">📄 {file.name}</p>}
 
-        <button
-          type="submit"
-          className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700"
-        >
+        <button type="submit" className="upload-button">
           🚀 Upload Paper
         </button>
       </form>

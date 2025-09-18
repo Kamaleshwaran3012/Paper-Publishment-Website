@@ -4,8 +4,7 @@ import { AppProvider, useAppContext } from "./context/AppContext";
 
 // Pages & Components
 import Navbar from "./components/Navbar";
-import SearchBar from "./components/SearchBar";
-import AuthorSearchBar from "./components/AuthorSearchBar";
+
 import SignupPage from "./pages/SignupPage";
 import LoginPage from "./pages/LoginPage";
 import MyProfilePage from "./pages/MyProfilePage";
@@ -13,7 +12,8 @@ import LibraryPage from "./pages/LibraryPage";
 import ProfilePage from "./pages/ProfilePage";
 import RecentPapers from "./pages/RecentPapers";
 import MyAccountPage from './pages/MyAccountPage';
-
+import './App.css';
+import HeaderSearch from "./pages/HearderSearch";
 // ✅ Route protection wrapper
 const PrivateRoute = ({ children }) => {
   const { user } = useAppContext();
@@ -28,20 +28,16 @@ const Layout = () => {
     <div className="flex flex-col min-h-screen">
       <Navbar />
 
-      {/* Conditional Hero/Header */}
-      {!isProfilePage && (
-        <div className="p-4 shadow flex items-center justify-center bg-gray-50">
-          <h1 className="text-2xl font-bold text-center">
-            <span className="text-blue-600">ISTA</span> PAPION
-          </h1>
-        </div>
-      )}
+     
+    <div className="header-container">
+      <h1 className="header-title">
+        <span className="highlight">ISTA</span> PAPION
+      </h1>
+    </div>
+
 
       {/* Conditional search bar */}
-      <div className="px-4 mt-2">
-        {isProfilePage ? <AuthorSearchBar /> : <SearchBar />}
-      </div>
-
+      <HeaderSearch/>
       {/* Page content */}
       <div className="flex-grow p-4">
         <Routes>

@@ -1,0 +1,62 @@
+/* Navbar Container */
+nav {
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  padding: 14px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky; /* Sticks to top */
+  top: 0;
+  z-index: 1000;
+}
+
+/* Links Group */
+nav .nav-links {
+  display: flex;
+  gap: 24px;
+}
+
+/* Individual Link */
+nav a {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #2563eb; /* Blue */
+  text-decoration: none;
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+/* Hover underline effect */
+nav a::after {
+  content: "";
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0%;
+  height: 2px;
+  background: linear-gradient(90deg, #2563eb, #9333ea);
+  transition: width 0.3s ease;
+}
+
+nav a:hover {
+  color: #1e40af; /* Darker blue */
+}
+nav a:hover::after {
+  width: 100%;
+}
+
+/* Profile Initial (Circle) */
+nav .profile-icon {
+  width: 36px;
+  height: 36px;
+  background: linear-gradient(135deg, #2563eb, #9333ea);
+  color: #fff;
+  font-weight: bold;
+  font-size: 1rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+}

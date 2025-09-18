@@ -1,12 +1,13 @@
 import React from 'react';
+import '../css/AuthorSearchBar.css'; // import css file
 
 const AuthorSearchBar = () => {
   return (
-    <div className="p-4">
+    <div className="author-search-container">
       <input
         type="text"
         placeholder="Search Author Profiles..."
-        className="border p-2 w-full"
+        className="author-search-input"
       />
     </div>
   );
