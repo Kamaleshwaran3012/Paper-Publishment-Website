@@ -1,37 +1,120 @@
 .library-container {
   max-width: 900px;
-  margin: 20px auto;
+  margin: 0 auto;
   padding: 20px;
+  font-family: Arial, sans-serif;
 }
 
-.search-input {
-  width: 100%;
-  padding: 10px 14px;
+.library-container h2 {
+  text-align: center;
   margin-bottom: 20px;
-  font-size: 1rem;
-  border-radius: 6px;
+  color: #333;
+}
+
+/* 🔍 Search Bar */
+.search-bar {
+  width: 100%;
+  max-width: 500px;
+  display: block;
+  margin: 0 auto 20px auto;
+  padding: 10px 14px;
   border: 1px solid #ccc;
-}
-
-.papers-list {
-  list-style: none;
-  padding: 0;
-}
-
-.paper-card {
-  padding: 14px;
-  border: 1px solid #ddd;
   border-radius: 8px;
-  margin-bottom: 12px;
-  background: #f9f9f9;
+  font-size: 15px;
+  transition: border-color 0.3s ease;
 }
 
-.download-link {
-  color: #2563eb;
-  text-decoration: none;
-  font-weight: 500;
+.search-bar:focus {
+  outline: none;
+  border-color: #0077ff;
+  box-shadow: 0 0 6px rgba(0, 119, 255, 0.3);
 }
-.download-link:hover {
+
+/* 📅 Filter container */
+.filter-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.filter-container select,
+.filter-container input[type="date"],
+.filter-container input[type="number"] {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: border-color 0.3s ease;
+}
+
+.filter-container select:focus,
+.filter-container input:focus {
+  outline: none;
+  border-color: #0077ff;
+  box-shadow: 0 0 5px rgba(0, 119, 255, 0.2);
+}
+
+/* 📑 Publication Cards */
+.publication-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 15px;
+}
+
+.publication-card {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 16px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.publication-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.publication-card h3 {
+  margin: 0 0 10px;
+  color: #222;
+}
+
+.publication-card a {
+  color: #0077ff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.publication-card a:hover {
   text-decoration: underline;
+}
+
+/* 🔢 Pagination */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  gap: 10px;
+}
+
+.pagination button {
+  padding: 6px 12px;
+  border: none;
+  background: #0077ff;
+  color: #fff;
+  border-radius: 6px;
   cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.pagination button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.pagination button:hover:not(:disabled) {
+  background: #005fcc;
 }

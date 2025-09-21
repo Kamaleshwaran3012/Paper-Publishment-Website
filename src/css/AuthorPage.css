@@ -1,37 +1,55 @@
-.author-page-container {
+.author-container {
+  max-width: 900px;
+  margin: 0 auto;
   padding: 20px;
-  font-family: Arial, sans-serif;
 }
 
-.search-input {
-  padding: 8px 12px;
-  margin-bottom: 20px;
+.author-search {
+  padding: 10px;
   width: 100%;
-  max-width: 400px;
-  font-size: 1rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  margin-bottom: 20px;
 }
 
-.authors-list {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
+.author-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 15px;
 }
 
 .author-card {
-  border: 1px solid #ccc;
-  padding: 16px;
-  border-radius: 8px;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background: #fdfdfd;
+  transition: transform 0.2s ease;
 }
 
-.paper-card {
-  margin-bottom: 12px;
-  padding: 8px;
-  border-left: 3px solid #2563eb;
-  background: #f9f9f9;
-  border-radius: 4px;
+.author-card:hover {
+  transform: scale(1.03);
+  background: #fafafa;
 }
 
-.paper-card a {
-  color: #2563eb;
+.author-link {
   text-decoration: none;
+  color: #0073e6;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.author-link:hover {
+  text-decoration: underline;
+}
+
+.scholar-link {
+  display: inline-block;
+  margin-top: 8px;
+  color: #333;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.scholar-link:hover {
+  color: #0073e6;
 }

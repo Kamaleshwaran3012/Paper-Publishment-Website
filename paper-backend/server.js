@@ -7,6 +7,7 @@ import path from "path";
 import axios from "axios"; 
 import fs from "fs";
 import { fileURLToPath } from "url";
+import Publication from "./papers/Publications.js";
 
 // Fix __dirname for ES modules
 const __filename = fileURLToPath(import.meta.url);
@@ -14,6 +15,9 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 dotenv.config();
+const router = express.Router();
+
+const SERP_API_KEY = process.env.SERP_API_KEY;
 
 app.use(express.json());
 app.use(cors()); // allow requests from frontend
@@ -28,115 +32,191 @@ mongoose.connect(process.env.MONGO_URI, {
 
 // ================== MODELS ==================
 
-// User Schema
-const userSchema = new mongoose.Schema({
-  name: String,
-  email: { type: String, unique: true },
-  password: String,  // hashed
-  createdAt: { type: Date, default: Date.now }
-}, { collection: "users" });
-
-const User = mongoose.model("User", userSchema);
-
-// Paper Schema
-const paperSchema = new mongoose.Schema({
-  title: String,
-  abstract: String,
-  fileData: String,
-  fileName: String,
-  author: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-  uploadedAt: { type: Date, default: Date.now }
-}, { collection: "paper" });
-
-const Paper = mongoose.model("Paper", paperSchema);
-
 // ================== ROUTES ==================
-
-// Signup user
-app.post("/signup", async (req, res) => {
-  try {
-    const { name, email, password } = req.body;
-    console.log("Signup request body:", req.body);
-
-    const existing = await User.findOne({ email });
-    if (existing) return res.status(400).json({ error: "User already exists" });
-
-    const hashedPass = await bcrypt.hash(password, 10);
-    const user = new User({ name, email, password: hashedPass });
-    await user.save();
-
-    console.log("✅ User saved:", user);
-
-    res.json({ message: "User registered successfully", user: { _id: user._id, name: user.name, email: user.email } });
-  } catch (err) {
-    console.error("Signup error:", err);
-    res.status(500).json({ error: err.message });
-  }
+const authorSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  authorId: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  affiliation: { type: String }, // store Google Scholar affiliation
+  createdAt: { type: Date, default: Date.now }
 });
 
-// Get all users
-app.get("/users", async (req, res) => {
+const Author = mongoose.model("Author", authorSchema);
+
+async function fetchAuthorInfo(authorId) {
   try {
-    const users = await User.find().select("-password"); // hide password
-    res.json(users);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-// Upload paper
-app.post("/upload", async (req, res) => {
-  try {
-    const { userId, title, abstract, fileName, fileBase64 } = req.body;
-
-    const user = await User.findById(userId);
-    if (!user) return res.status(404).json({ error: "User not found" });
-
-    const paper = new Paper({
-      title,
-      abstract,
-      fileName,
-      fileData: fileBase64,  // store Base64 string in DB
-      author: user._id
+    const res = await axios.get("https://serpapi.com/search", {
+      params: {
+        engine: "google_scholar_author",
+        author_id: authorId,
+        api_key: SERP_API_KEY,
+      },
     });
-    await paper.save();
 
-    res.json({ message: "Paper uploaded", paper });
+    // Extract name, affiliation, and publications
+    const author = res.data.author || {};
+    const name = author.name || "";
+    const affiliation = author.affiliations || "";
+    const publications = res.data.articles || [];
+
+    return { name, affiliation, publications };
+  } catch (err) {
+    console.error("Error fetching author info:", err.message);
+    return { name: "", affiliation: "", publications: [] };
+  }
+}
+
+
+// ================= Verify Google Scholar ID =================
+app.post("/verify-author-id", async (req, res) => {
+  const { authorId } = req.body;
+
+  try {
+    const response = await axios.get("https://serpapi.com/search", {
+      params: {
+        engine: "google_scholar_author",
+        author_id: authorId,
+        api_key: SERP_API_KEY,
+      },
+    });
+
+    const exists = response.data.author_id || (response.data.articles && response.data.articles.length > 0);
+    res.json({ exists: !!exists });
+  } catch (err) {
+    console.error("Error verifying author ID:", err.message);
+    res.status(500).json({ exists: false, error: "Failed to verify author ID" });
+  }
+});
+
+// ================= Signup Route =================
+app.post("/signup", async (req, res) => {
+  const { name, authorId, password } = req.body;
+
+  try {
+    const existing = await Author.findOne({ authorId });
+    if (existing)
+      return res.status(400).json({ error: "Author ID already registered" });
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const authorInfo = await fetchAuthorInfo(authorId);
+    const affiliation = authorInfo.affiliation || "";
+
+    const author = new Author({
+      name,
+      authorId,
+      password: hashedPassword,
+      affiliation,
+    });
+
+    await author.save();
+
+    res.json({
+      message: "User registered successfully",
+      user: {
+        id: author._id,
+        name: author.name,
+        authorId: author.authorId,
+        affiliation: author.affiliation, // ✅ include this
+      },
+    });
+  } catch (err) {
+    console.error("Signup error:", err.message);
+    res.status(500).json({ error: "Failed to register user" });
+  }
+});
+
+
+app.post("/api/fetch-publications/:authorId", async (req, res) => {
+  const { authorId } = req.params;
+
+  try {
+    const author = await Author.findOne({ authorId });
+    if (!author) return res.status(404).json({ error: "Author not found" });
+
+    const response = await axios.get("https://serpapi.com/search", {
+      params: {
+        engine: "google_scholar_author",
+        author_id: authorId,
+        api_key: SERP_API_KEY,
+      },
+    });
+
+    const articles = response.data.articles || [];
+
+    // Store publications in MongoDB and link to author
+    const savedPublications = [];
+    for (const article of articles) {
+      // Avoid duplicate entries
+      let existing = await Publication.findOne({ title: article.title, author: author._id });
+      if (!existing) {
+        const pub = new Publication({
+          title: article.title,
+          authors: article.authors || "",
+          year: article.year || "",
+          citation_count: article.cited_by.value,
+          link: article.link || "",
+          author: author._id,
+        });
+        await pub.save();
+        savedPublications.push(pub);
+      }
+    }
+
+    res.json({ message: "Publications fetched & stored", publications: savedPublications });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to fetch publications" });
+  }
+});
+
+// Get all publications of an author
+app.get("/api/my-publications/:authorId", async (req, res) => {
+  try {
+    const author = await Author.findOne({ authorId: req.params.authorId });
+    if (!author) return res.status(404).json({ error: "Author not found" });
+
+    const publications = await Publication.find({ author: author._id });
+    res.json(publications);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
 // ========== GET ALL PAPERS (Library) ==========
-app.get("/papers", async (req, res) => {
+app.get("/api/publications", async (req, res) => {
   try {
-    const papers = await Paper.find().populate("author", "name email");
-    res.json(papers);
+    const publications = await Publication.find();
+    res.json(publications);
   } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-// ========== GET MY PAPERS ==========
-app.get("/my-papers/:userId", async (req, res) => {
-  try {
-    const { userId } = req.params;
-    const papers = await Paper.find({ author: userId }).populate("author", "name email");
-    res.json(papers);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error("Error fetching publications:", err);
+    res.status(500).json({ error: "Server error" });
   }
 });
 // Example Node.js/Express login route
-app.post('/api/login', async (req, res) => {
-  const { email, password } = req.body;
-  const user = await User.findOne({ email });
-  if (!user) return res.status(404).json({ error: 'User not found' });
-   const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(401).json({ error: "Invalid credentials" });
+app.post("/login", async (req, res) => {
+  const { authorId, password } = req.body;
+  try {
+    const author = await Author.findOne({ authorId });
+    if (!author) return res.status(400).json({ error: "User not found" });
 
-  res.json({ user });
+    const match = await bcrypt.compare(password, author.password);
+    if (!match) return res.status(400).json({ error: "Invalid password" });
+
+    res.json({
+      user: {
+        id: author._id,
+        name: author.name,
+        authorId: author.authorId,
+        affiliation: author.affiliation, // ✅ include this
+      },
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Login failed" });
+  }
 });
+
 app.get("/authors-with-papers", async (req, res) => {
   try {
     const users = await User.find().select("-password"); // hide passwords
@@ -169,61 +249,40 @@ app.get("/authors-with-papers", async (req, res) => {
 });
 const uploadDir = path.join(__dirname, "papers");
 
-// Download route
-app.get("/download/:fileName", (req, res) => {
-  const fileName = req.params.fileName;
-  const filePath = path.join(uploadDir, fileName);
-
-  if (fs.existsSync(filePath)) {
-    res.download(filePath); // Forces download
-  } else {
-    res.status(404).send("❌ File not found");
-  }
-});
-// Example: Serve a PDF stored on disk
-app.get("/view/:fileName", (req, res) => {
-  const fileName = req.params.fileName;
-  const filePath = path.join(__dirname, "papers", fileName);
-
-  if (fs.existsSync(filePath)) {
-    res.setHeader("Content-Type", "application/pdf"); // adjust MIME type
-    res.sendFile(filePath);
-  } else {
-    res.status(404).send("File not found");
-  }
-});
-app.get("/view/:paperId", async (req, res) => {
-  const paper = await Paper.findById(req.params.paperId);
-  if (!paper) return res.status(404).send("Paper not found");
-
-  res.setHeader("Content-Type", "application/pdf");
-  res.send(paper.fileData); // assuming fileData is a Buffer
-});
-app.use(cors());
-
-// Replace with your SerpApi key
-const SERP_API_KEY = "d79c2438a5b436dfc1ca2c92db123ed89c06653f198d4f5719747b878f544df8";
-
-// Endpoint to fetch author details from Google Scholar
-app.get("/api/author/:authorId", async (req, res) => {
-  const authorId = req.params.authorId;
-
+// Get all authors
+app.get("/api/authors", async (req, res) => {
   try {
-    const response = await axios.get("https://serpapi.com/search", {
-      params: {
-        engine: "google_scholar_author",
-        author_id: authorId,
-        num:100,
-        api_key: SERP_API_KEY,
-      },
-    });
-
-    res.json(response.data);
-  } catch (error) {
-    console.error("Error fetching author info:", error.message);
-    res.status(500).json({ error: "Failed to fetch author info" });
+    const authors = await Author.find({}, { name: 1, authorId: 1 ,affiliation:1});
+    res.json(authors);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 });
+
+// Get author by authorId (Google Scholar ID)
+app.get("/api/author/:authorId", async (req, res) => {
+  try {
+    const author = await Author.findOne({ authorId: req.params.authorId });
+    if (!author) return res.status(404).json({ error: "Author not found" });
+    res.json(author);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Get publications of author by authorId
+app.get("/api/my-publications/:authorId", async (req, res) => {
+  try {
+    const author = await Author.findOne({ authorId: req.params.authorId });
+    if (!author) return res.status(404).json({ error: "Author not found" });
+
+    const publications = await Publication.find({ author: author._id });
+    res.json(publications);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 
 // ================== START SERVER ==================
 const PORT = process.env.PORT || 5000;

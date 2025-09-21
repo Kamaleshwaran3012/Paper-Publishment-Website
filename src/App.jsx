@@ -16,10 +16,11 @@ import HeaderSearch from "./pages/HearderSearch";
 import AuthorPage from "./pages/AuthorPage";
 import HomePage from "./components/HomePage";
 import AuthorSearch from "./components/AuthorSearchBar";
+import AuthorPublicationsPage from "./pages/AuthorPublicationPage";
 // ✅ Route protection wrapper
 const PrivateRoute = ({ children }) => {
   const { user } = useAppContext();
-  return user ? children : <Navigate to="/login" />;
+  return user ? children : <Navigate to="/profile" />;
 };
 
 const Layout = () => {
@@ -40,7 +41,6 @@ const Layout = () => {
 
       {/* Conditional search bar */}
       <HeaderSearch/>
-      <AuthorSearch/>
       {/* Page content */}
       <div className="flex-grow p-4">
         <Routes>
@@ -48,6 +48,8 @@ const Layout = () => {
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/author" element={<AuthorPage />} />
+           <Route path="/authors" element={<AuthorPage />} />
+            <Route path="/author/:authorId" element={<AuthorPublicationsPage />} />
           <Route
             path="/my-profile"
             element={

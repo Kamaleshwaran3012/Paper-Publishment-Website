@@ -2,97 +2,74 @@ import React, { useEffect, useState } from "react";
 import { useAppContext } from "../context/AppContext";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import "../css/ProfilePage.css"; // custom CSS
+import "../css/ProfilePage.css";
 
 const ProfilePage = () => {
-  const { user } = useAppContext();
+  const { user, loading } = useAppContext();
   const navigate = useNavigate();
-  const [myPapers, setMyPapers] = useState([]);
-
-  // 🔹 Redirect to login if user doesn't exist
+  const [publications, setPublications] = useState([]);
+  // redirect once we know loading is done
   useEffect(() => {
-    if (!user) {
+    if (!loading && !user) {
       navigate("/login");
     }
-  }, [user, navigate]);
+  }, [user, loading, navigate]);
+useEffect(() => {
+  console.log(user); // <-- add this
+}, [user]);
 
-  // 🔹 Fetch user's uploaded papers from backend
-  const fetchMyPapers = async () => {
-    try {
-      const res = await axios.get(`http://localhost:5000/my-papers/${user._id}`);
-      setMyPapers(res.data);
-    } catch (err) {
-      console.error("Error fetching papers:", err);
-    }
-  };
-
+  // fetch publications only if user exists
   useEffect(() => {
-    if (user?._id) fetchMyPapers();
+    const fetchAndStore = async () => {
+      if (user?.authorId) {
+        try {
+          await axios.post(
+            `http://localhost:5000/api/fetch-publications/${user.authorId}`
+          );
+          const res = await axios.get(
+            `http://localhost:5000/api/my-publications/${user.authorId}`
+          );
+          setPublications(res.data);
+        } catch (err) {
+          console.error(err);
+        }
+      }
+    };
+    fetchAndStore();
   }, [user]);
 
-  // 🔹 Handle delete
-  const handleDelete = async (paperId) => {
-    if (window.confirm("Are you sure you want to delete this paper?")) {
-      try {
-        const res = await axios.delete(`http://localhost:5000/papers/${paperId}`);
-        if (res.status === 200) {
-          setMyPapers(myPapers.filter((paper) => paper._id !== paperId));
-        }
-      } catch (err) {
-        console.error("Error deleting paper:", err);
-      }
-    }
-  };
-
-  // Prevent render if no user
+  if (loading) return <p>Loading...</p>;
   if (!user) return null;
 
   return (
     <div className="profile-container">
-      {/* 🔹 User Info & Upload Button */}
       <div className="profile-header">
-        <h2 className="profile-title">👤 Welcome, {user.name}</h2>
-        <p className="profile-email">Email: <span>{user.email}</span></p>
-
-        <button
-          onClick={() => navigate("/my-profile")}
-          className="upload-btn"
-        >
-          ➕ Upload New Paper
-        </button>
+        <h2>👤 Welcome, {user.name}</h2>
+        <p><b>Google Scholar ID:</b> {user.authorId}</p>
+        <p><b>Affiliation: </b>{user.affiliation}</p>
       </div>
 
-      {/* 🔹 Uploaded Papers Section */}
       <div className="papers-section">
-        <h3 className="papers-title">📄 Your Uploaded Papers</h3>
-
-        {myPapers.length === 0 ? (
-          <p className="no-papers">You haven’t uploaded any papers yet.</p>
+        <h3>📄 Your Publications</h3>
+        {publications.length === 0 ? (
+          <p>No publications found.</p>
         ) : (
-          <ul className="papers-list">
-            {myPapers.map((paper) => (
-              <li key={paper._id} className="paper-card">
-                <h4 className="paper-title">{paper.title}</h4>
-                <p className="paper-abstract"><strong>📝 Abstract:</strong> {paper.abstract}</p>
-                <p className="paper-meta">
-                  <strong>📎 File:</strong> {paper.fileName} <br />
-                  <strong>🕒 Uploaded:</strong> {new Date(paper.uploadedAt).toLocaleString()}
-                </p>
-                <div className="paper-actions">
+          <ul>
+            {publications.map((pub) => (
+              <li key={pub._id}>
+                <h4>{pub.title}</h4>
+                <p>Authors: {pub.authors}</p>
+                <p>Year: {pub.year}</p>
+                <p>Citations: {pub.citation_count}</p>
+                {pub.link && (
                   <a
-                    href={paper.fileUrl}
-                    download={paper.fileName}
-                    className="download-btn"
+                    href={pub.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
                   >
-                    ⬇️ Download
+                    🔗 View
                   </a>
-                  <button
-                    className="delete-btn"
-                    onClick={() => handleDelete(paper._id)}
-                  >
-                    🗑 Delete
-                  </button>
-                </div>
+                )}
               </li>
             ))}
           </ul>

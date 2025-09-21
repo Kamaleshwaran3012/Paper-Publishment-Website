@@ -7,11 +7,12 @@ const Navbar = () => {
   const { user, setUser } = useAppContext(); // get login state
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    // clear user from context and localStorage
-    setUser(null);
-    localStorage.removeItem("user"); 
-    navigate("/HomePage"); // redirect to login page
+   const handleLogout = () => {
+    const confirmed = window.confirm("Are you sure you want to logout?");
+    if (confirmed) {
+      setUser(null); // clears state and localStorage
+      navigate("/");
+    }
   };
 
   return (
