@@ -9,45 +9,57 @@ const LoginPage = () => {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    const storedUser = JSON.parse(localStorage.getItem('user'));
-    if (!storedUser) {
-      alert('No account found. Please sign up first.');
-      navigate('/signup');
-    } else if (storedUser.email === email && storedUser.password === password) {
-      setUser(storedUser);
-      navigate('/my-profile');
-    } else {
-      alert('Incorrect email or password');
+
+    try {
+      const response = await fetch('http://localhost:5000/api/login', { // replace with your backend endpoint
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Login successful
+        alert('✅ Login successful!');
+        setUser(data.user);
+        navigate('/profile');
+      } else {
+        // Wrong credentials or user not found
+        alert('❌ ' + data.error);
+      }
+    } catch (err) {
+      alert('⚠️ Server error: ' + err.message);
     }
   };
 
   return (
     <div className='logcont'>
-    <div className="login-container">
-      <h2>🔐 Login</h2>
-      <form onSubmit={handleLogin}>
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <button type="submit">Login</button>
-        <p>
-          Don't have an account? <a href="/signup">Create one</a>
-        </p>
-      </form>
-    </div>
+      <div className="login-container">
+        <h2>Login</h2>
+        <form onSubmit={handleLogin}>
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          <button type="submit">Login</button>
+          <p>
+            Don't have an account? <a href="/signup">Create one</a>
+          </p>
+        </form>
+      </div>
     </div>
   );
 };

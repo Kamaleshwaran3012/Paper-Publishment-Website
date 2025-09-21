@@ -6,29 +6,44 @@ nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  position: sticky; /* Sticks to top */
+  position: sticky;
   top: 0;
   z-index: 1000;
+  font-family: "Segoe UI", Arial, sans-serif;
 }
 
-/* Links Group */
-nav .nav-links {
+/* Left Group (Profile + Library) */
+.nav-left {
   display: flex;
-  gap: 24px;
+  align-items: center;
+  gap: 28px; /* spacing between Profile & Library */
 }
 
-/* Individual Link */
-nav a {
+/* Right Group (Signup + Login OR Logout) */
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 28px; /* spacing between links */
+}
+
+/* Common Links + Logout Button */
+nav a,
+.logout-btn {
   font-size: 1rem;
   font-weight: 500;
-  color: #2563eb; /* Blue */
+  color: #2563eb;
   text-decoration: none;
   position: relative;
   transition: color 0.3s ease;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
 }
 
 /* Hover underline effect */
-nav a::after {
+nav a::after,
+.logout-btn::after {
   content: "";
   position: absolute;
   bottom: -4px;
@@ -39,24 +54,12 @@ nav a::after {
   transition: width 0.3s ease;
 }
 
-nav a:hover {
-  color: #1e40af; /* Darker blue */
-}
-nav a:hover::after {
-  width: 100%;
+nav a:hover,
+.logout-btn:hover {
+  color: #1e40af;
 }
 
-/* Profile Initial (Circle) */
-nav .profile-icon {
-  width: 36px;
-  height: 36px;
-  background: linear-gradient(135deg, #2563eb, #9333ea);
-  color: #fff;
-  font-weight: bold;
-  font-size: 1rem;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+nav a:hover::after,
+.logout-btn:hover::after {
+  width: 100%;
 }

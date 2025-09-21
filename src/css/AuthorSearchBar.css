@@ -1,27 +1,37 @@
-.author-search-container {
-  padding: 16px;
-  display: flex;
-  justify-content: center;
-  margin: 20px;
+.author-search {
+  text-align: center;
+  padding: 20px;
+  font-family: Arial, sans-serif;
 }
 
-.author-search-input {
-  width: 100%;
-  max-width: 500px;
-  padding: 10px 14px;
-  border: 2px solid #0077ff;
-  border-radius: 25px;
-  outline: none;
-  font-size: 16px;
-  transition: all 0.3s ease-in-out;
+.author-search input {
+  padding: 10px;
+  margin-right: 10px;
+  width: 300px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
 }
 
-.author-search-input:focus {
-  border-color: #0056cc;
-  box-shadow: 0 0 8px rgba(0, 119, 255, 0.4);
+.author-search button {
+  padding: 10px 20px;
+  background-color: #0077ff;
+  border: none;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
 }
 
-.author-search-input::placeholder {
-  color: #888;
-  font-style: italic;
+.author-search button:hover {
+  background-color: #005ecc;
+}
+
+.author-info {
+  margin-top: 20px;
+  text-align: left;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  background: #f9f9f9;
+  padding: 15px;
+  border-radius: 12px;
 }

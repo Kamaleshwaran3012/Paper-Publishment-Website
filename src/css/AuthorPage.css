@@ -1,0 +1,37 @@
+.author-page-container {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.search-input {
+  padding: 8px 12px;
+  margin-bottom: 20px;
+  width: 100%;
+  max-width: 400px;
+  font-size: 1rem;
+}
+
+.authors-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.author-card {
+  border: 1px solid #ccc;
+  padding: 16px;
+  border-radius: 8px;
+}
+
+.paper-card {
+  margin-bottom: 12px;
+  padding: 8px;
+  border-left: 3px solid #2563eb;
+  background: #f9f9f9;
+  border-radius: 4px;
+}
+
+.paper-card a {
+  color: #2563eb;
+  text-decoration: none;
+}

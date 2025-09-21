@@ -28,7 +28,7 @@
 }
 
 /* 🔤 Input fields */
-.signup-input {
+input {
   width: 100%;
   padding: 0.75rem;
   border: 1px solid #d1d5db;
@@ -38,14 +38,14 @@
   transition: all 0.3s ease;
 }
 
-.signup-input:focus {
+input:focus {
   outline: none;
   border-color: #3b82f6;
   box-shadow: 0 0 6px rgba(59, 130, 246, 0.5);
 }
 
 /* 🚀 Button */
-.signup-btn {
+.but {
   width: 100%;
   padding: 0.9rem;
   background: #2563eb;
@@ -58,12 +58,11 @@
   transition: background 0.3s ease, transform 0.2s ease;
 }
 
-.signup-btn:hover {
-  background: #1d4ed8;
-  transform: translateY(-2px);
+.but:hover {
+  background: #003bde;
 }
 
-.signup-btn:active {
+.button:active {
   transform: scale(0.97);
 }
 
