@@ -1,8 +1,9 @@
 /* Navbar Container */
 nav {
-  background: #ffffff;
+ background: white;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   padding: 14px 40px;
+  height: 50px;
   display: flex;
   justify-content: space-between;
   align-items: center;

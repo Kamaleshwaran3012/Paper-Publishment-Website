@@ -25,7 +25,7 @@ const AuthorPage = () => {
 
   return (
     <div className="author-container">
-      <h2>👩‍🎓 Authors</h2>
+      <h2>👩‍🎓 Faculties</h2>
 
       <input
         type="text"

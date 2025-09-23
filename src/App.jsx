@@ -34,7 +34,7 @@ const Layout = () => {
      
     <div className="header-container">
       <h1 className="header-title">
-        <span className="highlight">ISTA</span> PAPION
+        <span className="highlight">IST</span> PAPION
       </h1>
     </div>
 

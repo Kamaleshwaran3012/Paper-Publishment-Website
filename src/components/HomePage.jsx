@@ -7,8 +7,8 @@ const HomePage = () => {
     <div className="homepage">
       {/* Hero Section */}
       <section className="hero">
-        <h1>Welcome to Research Hub</h1>
-        <p>Discover cutting-edge research papers, explore top authors, and stay updated with the latest academic trends.</p>
+        <h1>Welcome to <span style={{fontSize:"80px",color:"white",margin:"0px 10px"}}>IST</span>Papion</h1>
+        <p>Discover cutting-edge research papers, explore Our department faculties,and stay updated with the latest academic trends.</p>
         <Link to="/library" className="btn-primary">Explore Library</Link>
       </section>
 
@@ -21,8 +21,8 @@ const HomePage = () => {
             <p>Access thousands of research papers across multiple domains, all in one place.</p>
           </div>
           <div className="feature-card">
-            <h3>Top Authors</h3>
-            <p>Discover top researchers and their publications to stay updated with innovations.</p>
+            <h3>Faculties</h3>
+            <p>Discover Our department faculties and their publications to stay updated with innovations.</p>
           </div>
           <div className="feature-card">
             <h3>Advanced Search</h3>
@@ -43,7 +43,7 @@ const HomePage = () => {
         <h2>About Research Hub</h2>
         <p>
           Research Hub is a platform designed for academics, students, and professionals
-          to access high-quality research papers and connect with top authors. Stay updated, stay informed, and grow your knowledge with our curated resources.
+          to access high-quality research papers and connect with our department faculties. Stay updated, stay informed, and grow your knowledge with our curated resources.
         </p>
       </section>
 

@@ -1,62 +1,54 @@
 .library-container {
   max-width: 900px;
-  margin: 0 auto;
+  margin: auto;
   padding: 20px;
   font-family: Arial, sans-serif;
 }
 
-.library-container h2 {
+h2 {
   text-align: center;
   margin-bottom: 20px;
-  color: #333;
 }
 
-/* 🔍 Search Bar */
-.search-bar {
-  width: 100%;
-  max-width: 500px;
-  display: block;
-  margin: 0 auto 20px auto;
-  padding: 10px 14px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  font-size: 15px;
-  transition: border-color 0.3s ease;
-}
-
-.search-bar:focus {
-  outline: none;
-  border-color: #0077ff;
-  box-shadow: 0 0 6px rgba(0, 119, 255, 0.3);
-}
-
-/* 📅 Filter container */
-.filter-container {
+/* Controls row: search + filters inline */
+.controls-row {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  justify-content: center;
   margin-bottom: 20px;
+  align-items: center;
 }
 
-.filter-container select,
-.filter-container input[type="date"],
-.filter-container input[type="number"] {
+.controls-row .search-bar {
+  flex: 1; /* search bar takes most space */
+  min-width: 200px;
+}
+
+.controls-row input {
   padding: 8px 12px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
   font-size: 14px;
-  transition: border-color 0.3s ease;
+  border-radius: 5px;
+  border: 1px solid #bbb;
+  transition: 0.2s;
+  width: 100px;
+}
+.controls-row select{
+  padding: 8px 12px;
+  font-size: 14px;
+  border-radius: 5px;
+  border: 1px solid #bbb;
+  transition: 0.2s;
+  margin-bottom: 16px;
+  
 }
 
-.filter-container select:focus,
-.filter-container input:focus {
+.controls-row input:focus,
+.controls-row select:focus {
+  border-color: #007bff;
   outline: none;
-  border-color: #0077ff;
-  box-shadow: 0 0 5px rgba(0, 119, 255, 0.2);
 }
 
-/* 📑 Publication Cards */
+/* Publication list */
 .publication-list {
   display: grid;
   grid-template-columns: 1fr;
@@ -64,34 +56,40 @@
 }
 
 .publication-card {
-  background: #fff;
+  padding: 15px;
   border: 1px solid #ddd;
-  border-radius: 12px;
-  padding: 16px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border-radius: 10px;
+  background: #fff;
+  transition: transform 0.2s;
 }
 
 .publication-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  border-color: #007bff;
 }
 
 .publication-card h3 {
   margin: 0 0 10px;
-  color: #222;
+  color: #333;
+}
+
+.publication-card p {
+  margin: 5px 0;
+  color: #555;
 }
 
 .publication-card a {
-  color: #0077ff;
+  display: inline-block;
+  margin-top: 8px;
+  color: #007bff;
   text-decoration: none;
-  font-weight: bold;
 }
 
 .publication-card a:hover {
   text-decoration: underline;
 }
 
-/* 🔢 Pagination */
+/* Pagination */
 .pagination {
   display: flex;
   justify-content: center;
@@ -103,11 +101,11 @@
 .pagination button {
   padding: 6px 12px;
   border: none;
-  background: #0077ff;
+  background: #007bff;
   color: #fff;
-  border-radius: 6px;
+  border-radius: 5px;
   cursor: pointer;
-  transition: background 0.3s ease;
+  transition: background 0.2s;
 }
 
 .pagination button:disabled {
@@ -115,6 +113,18 @@
   cursor: not-allowed;
 }
 
-.pagination button:hover:not(:disabled) {
-  background: #005fcc;
+.pagination span {
+  font-size: 14px;
+}
+.download-section {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.download-section select,
+.download-section button {
+  padding: 6px 12px;
+  font-size: 14px;
 }

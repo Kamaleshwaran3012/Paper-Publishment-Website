@@ -1,9 +1,12 @@
 /* Hero Section */
 .hero {
-  background: linear-gradient(to right, #6366f1, #8b5cf6);
+   background: linear-gradient(90deg, #2563eb, #9333ea);
   color: white;
   text-align: center;
   padding: 6rem 1.5rem;
+  border-top: 2px solid rgb(255, 0, 119);
+  border-bottom: 2px solid rgb(255, 0, 119);
+  border-radius: 5px;
 }
 
 .hero h1 {
@@ -70,10 +73,13 @@
 
 /* Call-to-Action Section */
 .cta {
-  background: #6366f1;
+  background: linear-gradient(90deg, #2563eb, #9333ea);
   color: white;
   text-align: center;
   padding: 6rem 1.5rem;
+  border-top: 2px solid rgb(255, 0, 119);
+  border-bottom: 2px solid rgb(255, 0, 119);
+  border-radius: 5px;
 }
 
 .cta h2 {

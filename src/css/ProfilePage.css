@@ -46,8 +46,13 @@
    border-bottom: 2px solid black;
    padding: 5px;
    margin: 10px;
-   background-color: #eff9ff;
+   background-color: #ffffff;
    border-radius: 10px;
+}
+.papers-section ul li:hover{
+  border: 2px solid blue;
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+   transform: translateY(-3px);
 }
 
 /* ===== Publication Card ===== */
